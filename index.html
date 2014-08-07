@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- DO NOT REMOVE! THIS DISABLES PHONE NUMBER LINKING IN MOBILE SAFARI. -->
+<meta name="format-detection" content="telephone=no" />
+<!-- DO NOT REMOVE! THIS GIVES AD CREATIVE 1-TO-1 LAYOUT RATIO AND PREVENTS USER RESIZING. -->
+<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>In-App &amp; Mobile Web</title>
+<script id="MEDIALETS_SDK_ADAPTER" src="http://cdn.creative.medialytics.com/javascript/m/medialets.inapp.adapter.js" type="text/javascript" charset="utf-8"></script>
+
+<style>
+/* DO NOT REMOVE!
+   The Reset CSS gives the creative a clean slate on which to be built and
+   takes care of some known cross-device issues.
+ */
+/* Begin Medialets Reset CSS */
+* { margin:0;padding:0;border:0;outline:0;vertical-align:baseline;background:transparent;-webkit-touch-callout:none;-webkit-user-select:none;-webkit-text-size-adjust:none; }
+/* End Medialets Reset CSS */
+
+/* DO NOT REMOVE!
+   These style rules keep everything in the creative contained within the specified
+   parameters and prevent anything from interfering with content outside the ad.
+*/
+/* BOX THAT CONTAINS EVERYTHING IN THE AD */
+#container {
+    position:absolute;
+    overflow:hidden;
+    left:0;
+    top:0;
+    width: 100%;
+    height: 100%;
+    background-color: #E5DFD1;
+}
+
+/* INSERT AD-SPECIFIC CSS RULES HERE */
+#dimensions {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 320px;
+    height: 50px;
+    margin: -25px 0 0 -160px;
+    font-family: Helvetica, sans-serif;
+    font-size: 38px;
+    line-height: 50px;
+    text-align: center;
+	z-index:999;
+	display:none;
+}
+/** FULL SCREEN VIDEO **/
+#play {
+	display:none;
+    position: absolute;
+    overflow: hidden;
+    left: 50%;
+    top: 50%;
+    width: 400px;
+    height: 225px; /* ratio: 0.5639 */
+    margin: 25px 0 0 -200px;
+    background-image: url(images/banner/play.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 200;
+    background-color: #dedede;
+}
+#videoContainer {
+	display:none;
+    position: absolute;
+    overflow: hidden;
+    left: 50%;
+    top: 50%;
+    width: 400px;
+    height: 225px; /* ratio: 0.5639 */
+    margin: 25px 0 0 -200px;
+    -webkit-backface-visibility: hidden;
+    opacity: 0;
+    z-index: -1;
+}
+    #videoContainer.fullscreen {
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+        .videoActive #play {
+            z-index: 50;
+        }
+        .videoActive #videoContainer {
+            opacity: 1;
+            z-index: 9999;
+        }
+
+        #videoContainer .videoContainer {
+            width: 100%!important;
+            height: 100%!important;
+        }
+
+
+/* Orientation Example */
+/* We create an HTMLElement to show the
+ * current orientation CSS class that is added to the container.
+ */
+#orientationText {
+	display:none;
+    position: absolute;
+    left:50%;
+    top:0;
+    width:320px;
+    height:50px;
+    margin:0 0 0 -160px;
+    font-family: Helvetica, sans-serif;
+    font-size:38px;
+    line-height:50px;
+    text-align:center;
+	z-index:0;
+	display:none;
+}
+    /* Default: portrait */
+    #orientationText:after {
+        content: 'portrait';
+    }
+        /* And we can target a specific portrait type */
+        .portrait-180 #orientationText:after {
+            content: 'portrait portrait-180';
+        }
+
+    /* When in landscape, we can override the default portrait styles */
+    .landscape #orientationText:after {
+        content: 'landscape';
+    }
+        /* And we can target a specific landscape type */
+        .landscape-right #orientationText:after {
+            content: 'landscape landscape-right';
+        }
+        .landscape-left #orientationText:after {
+            content: 'landscape landscape-left';
+        }
+/* End Orientation Example */
+
+/* AD-SPECIFIC CSS RULES */
+@font-face {font-family: 'HelveticaNeueLTStd-LtCn';src: url('fonts/2AAB6E_0_0.eot');src: url('fonts/2AAB6E_0_0.eot?#iefix') format('embedded-opentype'),url('fonts/2AAB6E_0_0.woff') format('woff'),url('fonts/2AAB6E_0_0.ttf') format('truetype');}
+ 
+  
+@font-face {font-family: 'HelveticaNeueLTStd-Cn';src: url('fonts/2AAB6E_1_0.eot');src: url('fonts/2AAB6E_1_0.eot?#iefix') format('embedded-opentype'),url('fonts/2AAB6E_1_0.woff') format('woff'),url('fonts/2AAB6E_1_0.ttf') format('truetype');}
+ 
+  
+@font-face {font-family: 'HelveticaNeueLTStd-ThCn';src: url('fonts/2AAB6E_2_0.eot');src: url('fonts/2AAB6E_2_0.eot?#iefix') format('embedded-opentype'),url('fonts/2AAB6E_2_0.woff') format('woff'),url('fonts/2AAB6E_2_0.ttf') format('truetype');}
+
+#logo{
+	position:absolute;
+	top: 6px;
+	right: 24px;
+	height:41px;
+	width:167px;
+	background-image:url(images/banner/TDA_logo.jpg);
+	background-size: 167px 41px; 
+}
+#tap_icon{
+	position:absolute;
+	top:55%;
+	left:10%;
+	width:68px;
+	height:100px;
+	z-index:3;
+	text-align:center;
+}
+#tap_icon_background{
+	background-image:url(images/banner/tap_icon.png);
+	background-repeat:no-repeat;
+	background-size:68px 68px;
+	background-position:center top;
+	width:68px;
+	height:76px;
+	-webkit-animation: TAP_ICON_PULSE 2s infinite;
+	animation: TAP_ICON_PULSE 2s infinite;
+}
+@keyframes TAP_ICON_PULSE {
+  0%   { opacity: .25; }
+  50%   { opacity: 1; }
+  100% { opacity: .25; }
+}
+@-webkit-keyframes TAP_ICON_PULSE {
+  0%   { opacity: .25; }
+  50%  { opacity: 1; }
+  100% { opacity: .25; }
+}
+#tap_icon p{
+	font-size:12px;
+	font-family:"HelveticaNeueLTStd-Cn", sans-serif;
+}
+#frame_one_headlines{
+	position:absolute;
+	left:10%;
+	top:25%;
+	z-index:3;
+}
+#frame_one_headlines h1{
+	font-size:72px;
+	font-family: 'HelveticaNeueLTStd-Cn';
+	color:#07402e;
+}
+#frame_one_headlines h3{
+	font-size:32px;
+	font-family: 'HelveticaNeueLTStd-LtCn';
+	color:#3dae4a;
+}
+#frame_one_headlines h5{
+	font-size:22px;
+	font-family: 'HelveticaNeueLTStd-ThCn';
+	color:#07402e;
+}
+#frame_two_headline{
+	position:absolute;
+	top:115%;
+	left:30% !important;
+	width:650px;
+	z-index:3;
+	opacity:0;
+}
+#frame_two_headline h1{
+	font-size:42px;
+	font-family: 'HelveticaNeueLTStd-LtCn';
+	color:#07402e;
+	line-height: 38px;
+}
+#green_box_wrapper{
+	position:absolute;
+	left:30% !important;
+	top:130%;
+	z-index:3;
+	opacity:0;
+}
+#green_box_item_1{
+	float:left;
+	margin-right:25px;
+	-webkit-transform:scale(.1);
+}
+#green_box_item_2{
+	float:left;
+	margin-right:25px;
+	-webkit-transform:scale(.1);
+}
+#green_box_item_3{
+	float:left;
+	margin-right:25px;
+	-webkit-transform:scale(.1);
+}
+.green_box{
+	width:180px;
+	height:292px;
+	background-color: rgba(61, 174, 74, .88);
+	background-image:url(images/banner/learn_btn.jpg);
+	background-repeat:no-repeat;
+	background-size:76px 16px;
+	background-position:10px 262px;
+}
+.green_box_animation_scale{
+	-webkit-transition: all .5s ease-in-out;
+	-webkit-transform: scale(1) !important;
+}
+.green_box h1{
+	color: #07402e;
+	font-size:18px;
+	font-family: 'HelveticaNeueLTStd-ThCn';
+	/*font-family: "HelveticaNeueLightCondensed", "HelveticaNeue-Light-Condensed", "Helvetica Neue Light Condensed", "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosCnRegular', "Helvetica", "Tahoma", "Geneva", "Arial Narrow", "Arial", sans-serif; font-weight:300; font-stretch:condensed;*/
+	padding:12px 12px 0px 10px;
+}
+.green_box p{
+	font-size:11px;
+	color: #FFFFFF;
+	font-family: "HelveticaNeueUltraLight", "HelveticaNeue-Ultra-Light", "Helvetica Neue Ultra Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegular', "Arial", sans-serif; font-weight:100; font-stretch:normal;
+	/*font-style:italic;*/
+	padding:6px 12px 10px 12px;
+	letter-spacing:1px;
+	line-height:15px;
+}
+#white_text_bar{
+	position:absolute;
+	bottom:0px;
+	left:0;
+	width:100%;
+	height:32px;
+	background-color:#FFF;
+	color:#636466;
+	font-family:"Arial Narrow", sans-serif;
+	padding:10px;
+	z-index:3;
+}
+#white_tex_bar_copy{
+	padding:8px;
+}
+#quicklink{
+	color:#50b948;
+	display:inline-block;
+}
+#black_text_bar{
+	position:absolute;
+	bottom:-125px;
+	left:0;
+	width:100%;
+	height:109px;
+	background-color:#000;
+	color:#FFF;
+	font-size:9px;
+	font-family: 'HelveticaNeueLTStd-LtCn';
+	/*font-family:Arial, Helvetica, sans-serif;*/
+	/*font-family:"Arial Narrow", sans-serif;*/
+	z-index:3;
+}
+#black_text_bar p{
+	padding:17px 20px;
+	letter-spacing: .1em;
+}
+#curtain_background{
+	position:absolute;
+	width:100%;
+	height:100%;
+	left:0px;
+	top:0px;
+	background-image:url(images/banner/curtain_closed.png);
+	background-repeat:no-repeat;
+	background-size:cover;
+	z-index:1;
+}
+#curtain_background_left{
+	position:absolute;
+	width:285px;
+	height:100%;
+	left:-44px;
+	top:0px;
+	background-image:url(images/banner/curtain_leftside.png);
+	background-repeat:no-repeat;
+	background-size:cover;
+	z-index:2;
+}
+#curtain_guy{
+	z-index:0;
+	position:absolute;
+	top:0;
+	left:-3%;
+	width:333px;
+	height: 100%;
+	background-image:url(images/banner/curtain_guy.jpg);	
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-size:cover;
+	opacity:1;
+}
+/* ---------------- Ad Specific rules for the portrait layout ---------------- */
+.portrait #tap_icon{
+	top:55% !important;
+}
+.portrait #frame_two_headline {
+	left: 45% !important;
+	width: 420px !important;
+	top:10%;
+}
+.portrait #frame_two_headline h1 {
+	font-size:34px !important;
+}
+.portrait #green_box_wrapper{
+	left:45% !important;
+}
+.portrait .green_box{
+	width:355px !important;
+	height:156px !important;
+	float:none;
+	margin-bottom:20px;
+	background-position: 267px 130px;
+}
+.portrait #green_box_item_1.green_box{
+	background-position: 267px 110px !important;
+}
+.portrait #green_box_item_1{
+	height:136px !important;
+}
+/* ---------------- Ad Specific rules for the portrait-180 layout ---------------- */
+.portrait-180 #tap_icon{
+	top:55% !important;
+}
+.portrait-180 #frame_two_headline {
+	left: 45% !important;
+	top:10%;
+	width:420px !important;
+}
+.portrait-180 #frame_two_headline h1 {
+	font-size:34px !important;
+}
+.portrait-180 #green_box_wrapper{
+	left:45% !important;
+}
+.portrait-180 .green_box{
+	width:355px !important;
+	height:156px !important;
+	float:none;
+	margin-bottom:20px;
+	background-position: 267px 130px;
+}
+.portrait-180 #green_box_item_1{
+	height:136px !important;
+}
+.portrait-180 #green_box_item_1.green_box{
+	background-position: 267px 110px !important;
+}
+</style>
+</head>
+<body>
+<!-- DO NOT REMOVE! THIS IS THE CONTAINER FOR AD CREATIVE. -->
+<div id="container">
+
+    <!-- INSERT AD-SPECIFIC HTML ELEMENTS HERE -->
+    <div id="dimensions"></div>
+    <div id="play"></div>
+    <div id="videoContainer"></div>
+    <div id="orientationText"></div>
+    <!-- END AD-SPECIFIC HTML ELEMENTS -->
+    <!-- frame 1 elements -->
+    <div id="frame_one_headlines">
+    	<h3>PULL BACK THE CURTAIN</h3>
+        <h1>ON YOUR PORTFOLIO.</h1>
+        <br>
+        <h5>REVIEW YOUR INVESTMENTS WITH A PORTFOLIO CHECK&ndash;UP.</h5>
+    </div>
+    <div id="tap_icon"><div id="tap_icon_background"></div><p>TAP HERE</p></div>
+    <!--frame 2 elements -->
+    <div id="frame_two_headline"><h1>MOVE YOUR INVESTMENTS TO CENTER STAGE.</h1></div>
+    
+    <div id="green_box_wrapper"><!-- this wraps all three green boxes in one container -->
+        <!-- green module -->
+        <div id="green_box_item_1" class="green_box">
+            <h1>Get a great supporting cast with TD Ameritrade.</h1><p>At TD Ameritrade, we put your investment needs front and center. Our Investment Consultants will listen to you and give you guidance and support to help you pursue your investment goals.</p>
+        </div>
+        
+        <!-- green module -->
+        <div id="green_box_item_2" class="green_box">
+        <h1>See your investments in a new light.</h1><p>Your Portfolio Check-Up begins with an Investment Consultant learning about your unique goals and risk tolerance. They'll use an analysis tool to compare your current portfolio with a hypothetical model in order to illustrate different factors, and identify potential concerns and opportunities.</p>
+        </div>
+        
+        <!-- green module -->
+        <div id="green_box_item_3" class="green_box">
+        <h1>Investment Solutions as unique as you are.</h1><p>You have a unique investment style and goals. That's why, from professional portfolio management to independent investing, we offer access to the research, tools, services and investment platforms that help you invest the way you really want to.</p>
+        </div>
+    </div><!-- end the green_box_wrapper -->
+    
+    <!-- Global across the ad -->
+    <div id="white_text_bar">
+    	<div id="white_tex_bar_copy">
+    		Get up to $600 when you open a new account&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<div id="quicklink">tdameritrade.com/guidance</div>
+    	</div>
+        <div id="logo"></div>
+    </div>
+    
+    <div id="black_text_bar"><p>IMPORTANT: The projections or other information generated by the portfolio Analysis Tool regarding the likelihood of various investment outcomes are hypothetical in nature, do not reflect actual investment results and are not guarantees of future results. Results may vary with each use and over time.<br><br>All investments involve risk, and successful results are not guaranteed. Funding with $25,000&ndash;$99,999 receives $100; funding with $100,000&ndash;$249,999 receives $300; and funding with $250,000 or more receives $600. Cash bonus subject to nine&ndash;month funding&ndash;duration condition. See Web site for details and other restrictions/conditions. TD Ameritrade reserves the right to restrict or revoke this offer. This is not an offer or solicitation in any jurisdiction where we are not authorized to do business. TD Ameritrade, Inc., member FINRA/SIPC/NFA. TD Ameritrade is a trademark jointly owned by TD Ameritrade IP Company, Inc. and The Toronto&ndash;Dominion Bank. &copy;2014 TD Ameritrade IP Company, Inc. All rights reserved. Used with permission.</p>
+    </div>
+    
+    <div id="curtain_guy"></div>
+    
+    <div id="curtain_background"></div>
+    <div id="curtain_background_left"></div>
+
+</div>
+
+<!-- DO NOT REMOVE. REQUIRED FOR IN-APP SWIPE-ABLE BANNERS -->
+<script type="text/javascript" charset="utf-8">medialetsViewCanScroll=true;</script>
+<!-- DO NOT REMOVE! THIS CONTAINS THE MEDIALETS CORE JS AND ANY OTHER LIBRARIES OR PLUGINS NEEDED. -->
+<!-- IF REMOVED THE AD WILL LIKELY BREAK AND TRACKING WILL BE LOST. -->
+<script src="js/medialets.runtime.min.js" type="text/javascript"></script>
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery-ui-1.10.4.custom.min.js"></script>
+<script type="text/javascript">
+/* DO NOT REMOVE!
+   init wraps all of the js functions for the creative so that nothing will
+   fire before the ad is completely loaded.
+   This is similar to jQuery $( document ).ready.
+ */
+function init(){
+
+    /* PREVENT DOCUMENT FROM SCROLLING IN MOBILE WEB */
+    //document.ontouchmove = function(e) {e.preventDefault()};
+    $m.ui.tap = 'click';
+
+    /****************************/
+    /* 1. VARIABLE DECLARATIONS */
+    /****************************/
+
+    /* DO NOT REMOVE!
+       Declaration of widely-used variables at the top of the init prevents
+       repetitive queries to the DOM and increases efficiency.
+     */
+    /* CREATE JS VARIABLES */
+    var $d = document,
+        $b = $m.find('body')[0],
+        $c = $m('container'),
+        $dimensions = $m('dimensions'),
+        $logo = $m('logo'),
+		$quicklink = $m('quicklink'),
+		$GreenBox1 = $m('green_box_item_1'),
+		$GreenBox2 = $m('green_box_item_2'),
+		$GreenBox3 = $m('green_box_item_3'),
+		$TapIcon = $m('tap_icon'),
+		
+		
+
+        ctaURL = 'http://ad.doubleclick.net/clk;281455331;108178399;n;pc=[TPAS_ID]',  //logo
+		ctaURL2 = 'http://ad.doubleclick.net/clk;281455331;108178399;n;pc=[TPAS_ID]', //quicklink
+		ctaURL3 = 'http://ad.doubleclick.net/clk;281455331;108178399;n;pc=[TPAS_ID]', //green_box_item_1
+		ctaURL4 = 'http://ad.doubleclick.net/clk;281455331;108178399;n;pc=[TPAS_ID]', //green_box_item_2
+		ctaURL5 = 'http://ad.doubleclick.net/clk;281455331;108178399;n;pc=[TPAS_ID]', //green_box_item_3
+		
+		
+        // HTML5 Video plugin example
+        videoSrc = 'http://cdn.creative.medialytics.com/dev/creative-assets/medialets_short.m4v',
+        $play = $m('play'),
+        $videoContainer = $m('videoContainer'),
+        medialetsVideo = new $m.html5Video({
+            $container: $videoContainer,
+            buildPlayer: true,
+            autoStart: false,
+            videoSrc: videoSrc,
+            theme: {
+                mediaControls: {
+                    type : "custom"
+                }
+            }
+        });
+
+    /****************************/
+    /*       ORIENTATION        */
+    /****************************/
+    var currentClass, // default
+        clearOrientation = function () {
+            var classArrays = [],
+                i;
+
+            if (currentClass) {
+                if (currentClass.indexOf(' ') !== -1) {
+                    classArrays = currentClass.split(' ');
+                    for (i = 0; i < classArrays.length; i++) {
+                        $m.removeClass($b, classArrays[i]);
+                    }
+                } else {
+                    $m.removeClass($b, currentClass);
+                }
+            }
+        },
+
+        setOrientation = function (orientation) {
+            var className;
+
+            switch(top.window.orientation) {
+                case 0: // portrait
+                    className = 'portrait';
+                    break;
+                case 90: // landscape left
+                    className = 'landscape landscape-left';
+                    break;
+                case -90: //landscape right
+                    className = 'landscape landscape-right';
+                    break;
+                case 180: // portrait 180
+                    className = 'portrait portrait-180';
+                    break;
+            }
+
+            // This will emulate orientation based on the window dimensions
+            if (typeof orientation === 'string') {
+                className = orientation;
+            }
+
+            clearOrientation();
+            if (className !== undefined) {
+                $m.addClass($b, className);
+                currentClass = className;
+            }
+        },
+
+        initOrientationSet = false;
+
+    /****************************/
+    /* 2. FUNCTION DECLARATIONS */
+    /****************************/
+	
+	$( "#tap_icon" ).click(function() {
+  		mainAnimation();
+	});
+	//If user doesn't initiate animation, start it on it's own:
+	
+	setTimeout(function(){mainAnimation();},8000);// plays mainAnimation() below
+	
+	//MM ad functions and animations
+	function mainAnimation(){
+		
+		//Medialets TrackIncrementKey that the animation started automatically
+		$m.track.incrementKey('MMUserAction_TimesUserLetAnimationAutoStart_ForMainAnimation');
+		console.log('MMUserAction_TimesUserLetAnimationAutoStart_ForMainAnimation');
+		//---------------------------------------------------------------------------------//
+		
+		var winW = window.innerWidth;
+		//Checking to see if landscape to put headline and boxes at landscape locations
+		if(winW > 769) {
+			$( "#frame_two_headline").animate({
+			left:"30%",//Adjust the main css above so the animation from the left matches
+			top:"9%",
+			opacity: 1,
+			}, 1500, function() {
+			// Animation complete
+			});
+				
+			$( "#green_box_wrapper").animate({
+			left:"30%",//Adjust the main css above so the animation from the left matches
+			top:"22%",
+			opacity: 1,
+			}, 1500, function() {
+			//Animation complete
+			});
+		}
+		//Checking to see if portrait to put headline and boxes at portrait locations
+		else if(winW <= 768) {
+			$( "#frame_two_headline").animate({
+			left:"45%", //Adjust the main css above so the animation from the left matches
+			top:"10%",
+			opacity: 1,
+			}, 1500, function() {
+			// Animation complete
+			});
+				
+			$( "#green_box_wrapper").animate({
+			left:"45%",//Adjust the main css above so the animation from the left matches
+			top:"22%",
+			opacity: 1,
+			}, 1500, function() {
+			//Animation complete
+			});
+		}
+		//Adds class to animate the scale of the box
+		setTimeout(function(){
+			$("#green_box_item_1").addClass("green_box_animation_scale");
+		}, 500);
+		setTimeout(function(){
+			$("#green_box_item_2").addClass("green_box_animation_scale");
+		}, 750);
+		setTimeout(function(){
+			$("#green_box_item_3").addClass("green_box_animation_scale");
+		}, 1000);
+		
+		//Remove headlines
+		$( "#frame_one_headlines" ).animate({
+    	opacity: 0,
+  			}, 500, function() {
+    		// Animation complete.
+		});
+		$( "#tap_icon" ).animate({
+    		opacity: 0,
+  			}, 500, function() {
+    		// Animation complete.
+		});
+		$( "#curtain_background").delay(0).animate({
+			left:"9%",			
+			}, 1000, 'swing', function() {
+			// Animation complete.
+		});
+		$( "#curtain_background_left").delay(0).animate({
+			left:"-200",
+			}, 1000, 'swing', function() {
+			// Animation complete.
+		});
+		$("#curtain_guy").animate({
+			opacity: 1,
+			}, 0, function() {
+			// Animation complete.
+		});
+		$( "#frame_two_headline" ).delay(1500).animate({
+    		opacity: 1,
+  			}, 500, function() {
+    		// Animation complete.
+		});
+		$( "#white_text_bar").delay(1000).animate({
+			bottom:"109",
+			}, 500, function() {
+			// Animation complete.
+		});
+		$( "#black_text_bar").delay(1000).animate({
+			bottom:"0",
+			}, 500, function() {
+			// Animation complete.
+		});
+		
+		
+		
+	
+	}//end mainAnimation
+	
+	
+    /* INSERT AD-SPECIFIC JAVASCRIPT FUNCTION DECLARATIONS HERE (OPTIONAL) */
+    function showDimensionsAndEmulateOrientation() {
+        $dimensions.innerHTML = window.innerWidth + 'x' + window.innerHeight;
+
+        // This will emulate orientation based on the window dimensions (ie. resize event).
+        // But we want to avoid setting orientation twice when both 'orientationchange' and 'resize' events fired.
+        if (top.window.orientation === undefined) {
+            if (window.innerWidth > window.innerHeight) {
+                setOrientation('landscape');
+            } else {
+                setOrientation('portrait');
+            }
+            initOrientationSet = true;
+        }
+    }
+
+    function playVideo() {
+        medialetsVideo.play();
+
+        $m.bind(medialetsVideo.o.$video, 'timeupdate', function (e) {
+            var currentTime = medialetsVideo.o.$video.currentTime,
+                percentElapsed = (currentTime/medialetsVideo.o.$video.duration) * 100;
+
+            if (percentElapsed > 0) {
+                $c.className = 'videoActive';
+            }
+
+            if (percentElapsed >= 100) {
+                $c.className = 'end';
+            }
+
+            if (currentTime > 29){
+                medialetsVideo.pause();
+                $c.className = 'end';
+            }
+
+        });
+
+        $m.bind(medialetsVideo.o.$kill, $m.ui.tap, function () {
+            medialetsVideo.pause();
+            $c.className = 'end';
+        });
+
+        $m.bind(medialetsVideo.o.$video, 'm.html5VideoEnded', function () {
+            $c.className = 'end';
+        });
+
+        // Alternative is to play video using $m.playVideo()
+        //        try {
+        //            medialets.playVideo(videoSrc);
+        //        } catch (err) {
+        //            $d.location = videoSrc;
+        //        }
+    }
+
+    /****************************/
+    /* 3. ATTACH EVENT HANDLERS */
+    /****************************/
+
+    /* INSERT YOUR AD-SPECIFIC EVENT HANDLERS HERE (OPTIONAL) */
+
+    /* A CLICK-THROUGH IMPLEMENTATION. */
+    $m.bind($logo, $m.ui.tap, function() {
+        /* the $m.track.incrementKey() function must be used for discreet tracking of individual cick-throughs. */
+        $m.track.incrementKey('MMUserAction_TimesUserDidClickThrough_ForTheLogo');
+        try {
+            /* the $m.open() function must be used to implement and track click-throughs. */
+            $m.open(ctaURL);
+        } catch(err) {
+            /* just a backup in case all else fails */
+            $d.location = ctaURL;
+        }
+    });
+	/* A CLICK-THROUGH IMPLEMENTATION. */
+    $m.bind($quicklink, $m.ui.tap, function() {
+        /* the $m.track.incrementKey() function must be used for discreet tracking of individual cick-throughs. */
+        $m.track.incrementKey('MMUserAction_TimesUserDidClickThrough_ForTheQuickLink');
+        try {
+            /* the $m.open() function must be used to implement and track click-throughs. */
+            $m.open(ctaURL2);
+        } catch(err) {
+            /* just a backup in case all else fails */
+            $d.location = ctaURL2;
+        }
+    });
+	/* A CLICK-THROUGH IMPLEMENTATION. */
+    $m.bind($GreenBox1, $m.ui.tap, function() {
+        /* the $m.track.incrementKey() function must be used for discreet tracking of individual cick-throughs. */
+        $m.track.incrementKey('MMUserAction_TimesUserDidClickThrough_ForTheGreenBox1');
+        try {
+            /* the $m.open() function must be used to implement and track click-throughs. */
+            $m.open(ctaURL3);
+        } catch(err) {
+            /* just a backup in case all else fails */
+            $d.location = ctaURL3;
+        }
+    });
+	/* A CLICK-THROUGH IMPLEMENTATION. */
+    $m.bind($GreenBox2, $m.ui.tap, function() {
+        /* the $m.track.incrementKey() function must be used for discreet tracking of individual cick-throughs. */
+        $m.track.incrementKey('MMUserAction_TimesUserDidClickThrough_ForTheGreenBox2');
+        try {
+            /* the $m.open() function must be used to implement and track click-throughs. */
+            $m.open(ctaURL4);
+        } catch(err) {
+            /* just a backup in case all else fails */
+            $d.location = ctaURL4;
+        }
+    });
+	/* A CLICK-THROUGH IMPLEMENTATION. */
+    $m.bind($GreenBox3, $m.ui.tap, function() {
+        /* the $m.track.incrementKey() function must be used for discreet tracking of individual cick-throughs. */
+        $m.track.incrementKey('MMUserAction_TimesUserDidClickThrough_ForTheGreenBox3');
+        try {
+            /* the $m.open() function must be used to implement and track click-throughs. */
+            $m.open(ctaURL5);
+        } catch(err) {
+            /* just a backup in case all else fails */
+            $d.location = ctaURL5;
+        }
+    });
+	/* THE TRACK IMPLEMENTATION FOR TAP HERE ICON */
+    $m.bind($TapIcon, $m.ui.tap, function() {
+        /* the $m.track.incrementKey() function must be used for discreet tracking of individual cick-throughs. */
+        $m.track.incrementKey('MMUserAction_TimesUserDidClickTapToPlay_ForTheTapHereIcon');
+		console.log('MMUserAction_TimesUserDidClickTapToPlay_ForTheTapHereIcon');
+    });
+
+
+    $m.bind($play, $m.ui.tap, playVideo);
+
+    top.window.addEventListener('resize', showDimensionsAndEmulateOrientation);
+
+    showDimensionsAndEmulateOrientation();
+
+    /****************************/
+    /*   ORIENTATION HANDLER    */
+    /****************************/
+
+    top.window.addEventListener('orientationchange', setOrientation);
+
+    if (!initOrientationSet) {
+        setOrientation();
+    }
+
+}
+
+//function to kickoff creative
+medialets.onReady(init);
+
+</script>
+</body>
+</html>
